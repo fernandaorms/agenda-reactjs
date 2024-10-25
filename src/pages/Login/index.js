@@ -1,6 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+
 import { Title } from './styled';
+import  * as defaultActions from '../../store/modules/default/actions';
 
 // import axios from '../../services/axios';
 
@@ -18,10 +20,9 @@ const Login = () => {
     function handleClick(e) {
         e.preventDefault();
 
-        dispatch({
-            type: 'BUTTON_CLICK',
-        });
+        dispatch(defaultActions.clickButton());
     }
+    
     return (
         <div className='container'>
             <Title>
