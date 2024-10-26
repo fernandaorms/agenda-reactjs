@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 
 const Header = () => {
-    const notify = () => toast.info("This is a toast notification !");
+    const notify = () => toast("This is a toast notification !");
     const buttonClicked = useSelector(state => state.default.buttonClicked);
 
     return (

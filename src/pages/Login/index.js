@@ -20,7 +20,7 @@ const Login = () => {
     function handleClick(e) {
         e.preventDefault();
 
-        dispatch(defaultActions.clickButton());
+        dispatch(defaultActions.clickButtonRequest());
     }
     
     return (
