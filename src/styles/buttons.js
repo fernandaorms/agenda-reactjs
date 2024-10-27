@@ -15,6 +15,6 @@ export const PrimaryButton = styled.button`
     cursor: pointer;
 
     &:hover {
-        filter: brightness(0.85);
+        background: ${colors.primary_color_dark};
     }
 `

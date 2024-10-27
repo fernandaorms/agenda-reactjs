@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { get } from 'lodash';
 
 import axios from '../../services/axios';
-import { Intro } from './styled';
+import { Title, Alternative } from './styled';
 import { FormContainer, Form } from '../../styles/forms';
 import { PrimaryButton } from '../../styles/buttons';
 
@@ -101,11 +101,9 @@ const SignUp = () => {
             <section className='main'>
                 <div className='container'>
                     <FormContainer>
-                        <Intro>
+                        <Title>
                             <h1>Sign Up</h1>
-
-                            <p>Already have an account? <Link to='/login'>Login</Link> to start using Agenda!</p>
-                        </Intro>
+                        </Title>
 
                         <Form onSubmit={handleSubmit} noValidate>
                             <div className='field-group line'>
@@ -159,6 +157,10 @@ const SignUp = () => {
                                 <PrimaryButton type='submit'>Create Account</PrimaryButton>
                             </div>
                         </Form>
+
+                        <Alternative>
+                            <p>Already have an account? <Link to='/login'>Login</Link> to start using Agenda!</p>
+                        </Alternative>
                     </FormContainer>
                 </div>
             </section>

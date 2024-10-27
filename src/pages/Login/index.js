@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Intro } from './styled';
+import { Title, Alternative } from './styled';
 import { FormContainer, Form } from '../../styles/forms';
 import { PrimaryButton } from '../../styles/buttons';
 
@@ -17,11 +17,9 @@ const Login = () => {
             <section className='main'>
                 <div className='container'>
                     <FormContainer>
-                        <Intro>
+                        <Title>
                             <h1 className='title'>Login</h1>
-
-                            <p>Don't have an account? <Link to='/sign-up'>Sign Up</Link> to start using Agenda!</p>
-                        </Intro>
+                        </Title>
 
                         <Form onSubmit={handleSubmit} noValidate>
                             <div className='field line'>
@@ -46,6 +44,10 @@ const Login = () => {
                                 <PrimaryButton type='submit'>Login</PrimaryButton>
                             </div>
                         </Form>
+
+                        <Alternative>
+                            <p>Don't have an account? <Link to='/sign-up'>Sign Up</Link> to start using Agenda!</p>
+                        </Alternative>
                     </FormContainer>
                 </div>
             </section>

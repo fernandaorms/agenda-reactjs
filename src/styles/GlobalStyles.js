@@ -35,7 +35,7 @@ export default createGlobalStyle`
         font-family: var(--default-font-family);
         font-size: 16px;
         line-height: 150%;
-        color: #000;
+        color: ${colors.md_contrast_color};
         background-color: var(--background-color);
     }
 
@@ -55,6 +55,7 @@ export default createGlobalStyle`
     h6 {
         font-family: var(--heading-font-family);
         font-weight: 600;
+        color: ${colors.high_contrast_color};
     }
 
     h1,
