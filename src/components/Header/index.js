@@ -1,14 +1,9 @@
 import React from 'react';
-import { Nav, Buttons } from './styled.js'
+import { Nav, Buttons, Menu } from './styled.js'
 import { FaAddressBook } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
 
 const Header = () => {
-    const notify = () => toast("This is a toast notification !");
-    const buttonClicked = useSelector(state => state.default.buttonClicked);
-
     return (
         <header>
             <div className='container'>
@@ -18,11 +13,27 @@ const Header = () => {
                         <span>Agenda</span>
                     </Link>
 
-                    { buttonClicked ?  'Logado' : 'Não Logado'}
+                    <div className='menu'>
+                        <Menu>
+                            <li>
+                                <Link className='users' to='/users'>Users</Link>
+                            </li>
+
+                            <li>
+                                <Link className='contacts' to='/contacts'>Contacts</Link>
+                            </li>
+
+                            <li>
+                                <Link className='photos' to='/photos'>Photos</Link>
+                            </li>
+
+                            <li>
+                                <Link className='profile' to='/profile'>Profile</Link>
+                            </li>
+                        </Menu>      
+                    </div>
 
                     <Buttons className='buttons'>
-                        <button onClick={notify}>Notify !</button>
-
                         <Link className='sign-in' to='/login'>Login</Link>
 
                         <Link className='sign-up' to='/sign-up'>Sign Up</Link>

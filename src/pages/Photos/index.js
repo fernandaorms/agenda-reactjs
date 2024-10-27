@@ -1,10 +1,10 @@
-const Page404 = () => {
+const Photos = () => {
     return (
         <main>
             <section className='main'>
                 <div className='container'>
                     <div className='title'>
-                        <h1>404</h1>
+                        <h1>Photos</h1>
                     </div>
                 </div>
             </section>
@@ -12,4 +12,4 @@ const Page404 = () => {
     )
 };
 
-export default Page404;
+export default Photos;

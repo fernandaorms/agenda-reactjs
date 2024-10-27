@@ -1,15 +1,14 @@
-import { Title } from './styled';
-
 const SignUp = () => {
     return (
-        <div className='container'>
-            <Title>
-                Sign Up
-                <span>Already have an account?</span>
-            </Title>
-            
-            <p>Lorem ipsum dolor sit amet.</p>
-        </div>
+        <main>
+            <section className='main'>
+                <div className='container'>
+                    <div className='title'>
+                        <h1>Sign Up</h1>
+                    </div>
+                </div>
+            </section>
+        </main>
     )
 };
 

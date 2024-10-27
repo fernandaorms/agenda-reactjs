@@ -5,6 +5,9 @@ export const Nav = styled.nav`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 24px 0;
+    border-bottom: 1px solid #cdcdcd;
+    margin-bottom: 40px;
 
     .logo {
         display: flex;
@@ -38,3 +41,10 @@ export const Buttons = styled.div`
         }
     }
 `;
+
+
+export const Menu = styled.ul`
+    display: flex;
+    align-items: center;
+    gap: 0 32px;
+`
