@@ -6,7 +6,7 @@ const createPersistedReducers = (reducers) => {
         {
             key: 'REACT-BASE',
             storage,
-            whitelist: ['default']
+            whitelist: ['auth'],
         }, 
         reducers
     );
