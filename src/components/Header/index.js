@@ -8,24 +8,18 @@ import axios from '../../services/axios';
 import { Nav, Buttons, Menu, Profile } from './styled'
 
 const Header = () => {
-    
-
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
     const [user, setUser] = useState([]);
 
     useEffect(() => {
-        if (isLoggedIn) {
-            async function getData() {
-                const response = await axios.get('users');
+        async function getData() {
+            const response = await axios.get('users');
 
-                setUser(response.data);
-
-                console.log(user);
-            }
-
-            getData();
+            setUser(response.data);
         }
-    }, [isLoggedIn]);
+
+        getData();
+    }, []);
 
     return (
         <header>

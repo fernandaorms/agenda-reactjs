@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { get } from 'lodash';
 import { FaCircleUser, FaArrowRight, FaClipboardUser, FaImages } from 'react-icons/fa6';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import axios from '../../services/axios';
