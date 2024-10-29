@@ -10,6 +10,14 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case types.LOGIN_REQUEST: {
+            const newState = { 
+                ...state,
+                isLoading: true,
+            };
+            return newState;
+        }
+
         case types.LOGIN_SUCCESS: {
             const {token, user } = action.payload;
 
@@ -18,6 +26,7 @@ const reducer = (state = initialState, action) => {
                 isLoggedIn: true,
                 token: token,
                 user: user,
+                isLoading: false,
             }
 
             return newState;

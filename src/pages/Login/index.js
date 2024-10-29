@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { isEmail } from 'validator';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { get } from 'lodash';
 
 import Loader from '../../components/Loader';
@@ -14,8 +14,11 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
+
     const prevPath = get(location, 'state.from', '/');
 
+    const isLoading = useSelector(state => state.auth.isLoading);
+    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -62,7 +65,7 @@ const Login = () => {
             <section className='main'>
                 <div className='container'>
                     <FormContainer className='loader-container'>
-                        <Loader isLoading={false} />
+                        <Loader isLoading={isLoading} />
 
                         <Title>
                             <h1 className='title'>Login</h1>

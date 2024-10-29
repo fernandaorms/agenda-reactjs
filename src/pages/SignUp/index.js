@@ -5,17 +5,20 @@ import { toast } from 'react-toastify';
 import { get } from 'lodash';
 
 import axios from '../../services/axios';
+import Loader from '../../components/Loader';
 import { Title, Alternative } from './styled';
 import { FormContainer, Form } from '../../styles/forms';
 import { PrimaryButton } from '../../styles/buttons';
 
 const SignUp = () => {
+    const navigate = useNavigate();
+
     const [firstName, setfirstName] = useState('');
     const [lastName, setlastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
-    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
 
     const [errors, setErrors] = useState({
         firstName: [],
@@ -79,6 +82,8 @@ const SignUp = () => {
 
         if (validateFormClient()) return;
 
+        setIsLoading(true);
+
         try {
             await axios.post('users', {
                 first_name: firstName,
@@ -87,12 +92,16 @@ const SignUp = () => {
                 password: password
             });
 
+            setIsLoading(false);
+            
             toast.dismiss();
             toast.success('Registration successful! Please log in to continue.');
             navigate('/login');
         } catch (err) {
             const errors = get(err, 'response.data.errors', []);
             errors.map((error) => toast.error(error));
+
+            setIsLoading(false);
         }
     }
 
@@ -100,7 +109,9 @@ const SignUp = () => {
         <main>
             <section className='main'>
                 <div className='container'>
-                    <FormContainer>
+                    <FormContainer className='loader-container'>
+                        <Loader isLoading={isLoading} />
+
                         <Title>
                             <h1>Sign Up</h1>
                         </Title>
