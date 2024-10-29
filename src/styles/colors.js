@@ -13,4 +13,5 @@ export const dark_color = '#343a40';
 export const high_contrast_color = '#13161A'; 
 export const md_contrast_color = '#42464D'; 
 
-export const border_color = '#E1E6EB'; 
+export const border_color = '#E1E6EB';
+export const border_color_light = '#dbe0ef';

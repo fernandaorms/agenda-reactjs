@@ -267,4 +267,9 @@ export default createGlobalStyle`
         padding-right: 15px;
         padding-left: 15px;
     }
+
+    .loader-container {
+        position: relative;
+        overflow: hidden;
+    }
 `;

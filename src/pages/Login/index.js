@@ -4,6 +4,7 @@ import { isEmail } from 'validator';
 import { useDispatch } from 'react-redux';
 import { get } from 'lodash';
 
+import Loader from '../../components/Loader';
 import { Title, Alternative } from './styled';
 import { FormContainer, Form } from '../../styles/forms';
 import { PrimaryButton } from '../../styles/buttons';
@@ -60,7 +61,9 @@ const Login = () => {
         <main>
             <section className='main'>
                 <div className='container'>
-                    <FormContainer>
+                    <FormContainer className='loader-container'>
+                        <Loader isLoading={false} />
+
                         <Title>
                             <h1 className='title'>Login</h1>
                         </Title>
