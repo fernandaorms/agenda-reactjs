@@ -9,7 +9,6 @@ import Photos from '../pages/Photos';
 import Profile from '../pages/Profile';
 import ProfileEdit from '../pages/Profile/edit';
 import SignUp from '../pages/SignUp';
-import Users from '../pages/Users';
 
 import PrivateRoutes from './PrivateRoutes';
 import LoggedOutRoutes from './LoggedOutRoutes';
@@ -21,7 +20,6 @@ const AppRoutes = () => {
             <Route path='/contacts' element={<Contacts />}/>
             <Route path='/contacts/:id' element={<SingleContact />} />
             <Route path='/photos' element={<Photos />} />
-            <Route path='/users' element={<Users />} />
             
             <Route element={<LoggedOutRoutes />}>
                 <Route path='/login' element={<Login />} />

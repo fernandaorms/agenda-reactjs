@@ -63,7 +63,7 @@ const Profile = () => {
                         <Menu>
                             <Link to='/profile/edit'>
                                 <FaClipboardUser />
-                                <span>Update Profile</span>
+                                <span>My Account</span>
                                 <FaArrowRight />
                             </Link>
 
