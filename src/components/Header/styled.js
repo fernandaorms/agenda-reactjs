@@ -64,6 +64,10 @@ export const Profile = styled.div`
         color: #D9D9D9;
     }
 
+    .icon {
+        font-size: 32px;
+    }
+
     span {
         color: ${colors.high_contrast_color};
         font-weight: 600;

@@ -60,7 +60,7 @@ const Header = () => {
                                 {get(user, 'profile_picture.url', false) ? (
                                     <img src={user.profile_picture.url} alt={`${user.first_name} ${user.last_name} Profile Pic`} />
                                 ) : (
-                                    <FaCircleUser />
+                                    <FaCircleUser className='icon' />
                                 )}
                             </Link>
                         </Profile>

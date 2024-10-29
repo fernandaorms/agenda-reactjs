@@ -12,7 +12,7 @@ import SignUp from '../pages/SignUp';
 import Users from '../pages/Users';
 
 import PrivateRoutes from './PrivateRoutes';
-import PublicRoutes from './PublicRoutes';
+import LoggedOutRoutes from './LoggedOutRoutes';
 
 const AppRoutes = () => {
     return (
@@ -22,8 +22,11 @@ const AppRoutes = () => {
             <Route path='/contacts/:id' element={<SingleContact />} />
             <Route path='/photos' element={<Photos />} />
             <Route path='/users' element={<Users />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/sign-up' element={<SignUp />} />
+            
+            <Route element={<LoggedOutRoutes />}>
+                <Route path='/login' element={<Login />} />
+                <Route path='/sign-up' element={<SignUp />} />
+            </Route>
 
             <Route element={<PrivateRoutes />}>
                 <Route path='/profile' element={<Profile />}/>
