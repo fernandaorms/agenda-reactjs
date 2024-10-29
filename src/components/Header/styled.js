@@ -19,9 +19,9 @@ export const Nav = styled.nav`
 export const Buttons = styled.div`
     display: flex;
     align-items: center;
-    gap: 0 16px;
+    gap: 0 8px;
 
-    .button {
+    a {
         display: flex;
         align-items: center;
         gap: 0 8px;
@@ -47,4 +47,25 @@ export const Menu = styled.ul`
     display: flex;
     align-items: center;
     gap: 0 32px;
+`
+
+export const Profile = styled.div`
+    a {
+        display: flex;
+        align-items: center;
+        gap: 0 8px;
+    }
+
+    img {
+        height: 32px;
+        width: 32px;
+        border-radius: 50%;
+        overflow: hidden;
+        color: #D9D9D9;
+    }
+
+    span {
+        color: ${colors.high_contrast_color};
+        font-weight: 600;
+    }    
 `

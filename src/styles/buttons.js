@@ -18,3 +18,20 @@ export const PrimaryButton = styled.button`
         background: ${colors.primary_color_dark};
     }
 `
+
+export const DangerButtonLight = styled.button`
+    height: 48px;
+    width: 100%;
+    transition: .3s ease;
+    border-radius: 80px;
+    border: none;
+    background: #FFF1F1;
+    color: ${colors.danger_color};
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover {
+        background: #FFD5D5;
+    }
+`
