@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { get } from 'lodash';
 import { FaCircleUser, FaArrowRight, FaClipboardUser, FaImages } from 'react-icons/fa6';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import axios from '../../services/axios';
 import * as actions from '../../store/modules/auth/actions';
@@ -11,19 +12,31 @@ import { Container, UserInfo, ProfilePicture, Menu } from './styled';
 import { DangerButtonLight } from '../../styles/buttons';
 
 const Profile = () => {
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
     const dispatch = useDispatch();
 
     const [user, setUser] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        if (!isLoggedIn) return;
+
         async function getData() {
             setIsLoading(true);
+            
+            try {
+                const response = await axios.get('users');
+    
+                setUser(response.data);
+                setIsLoading(false);
+            } catch (err) {
+                const errors = get(err, 'response.data.errors', []);
 
-            const response = await axios.get('users');
+                if (errors.length > 0) errors.map((error) => toast.error(error));
+                else toast.error(err.message);
 
-            setUser(response.data);
-            setIsLoading(false);
+                setIsLoading(false);
+            }
         }
 
         getData();
