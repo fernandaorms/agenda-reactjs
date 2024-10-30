@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+
 import * as colors from '../../styles/colors';
 
 export const Nav = styled.nav`
@@ -9,11 +11,21 @@ export const Nav = styled.nav`
     border-bottom: 1px solid #cdcdcd;
     margin-bottom: 40px;
 
-    .logo {
+    .left {
         display: flex;
         align-items: center;
-        gap: 0 8px;
+        gap: 0 24px;
     }
+`;
+
+export const Logo = styled(Link)`
+    display: flex;
+    align-items: center;
+    gap: 0 8px;
+
+    font-size: 18px;
+    font-weight: 600;
+    color: ${colors.high_contrast_color};
 `;
 
 export const Buttons = styled.div`
@@ -42,14 +54,21 @@ export const Buttons = styled.div`
     }
 `;
 
-
 export const Menu = styled.ul`
     display: flex;
     align-items: center;
     gap: 0 32px;
-`
+
+    a:hover {
+        color: ${colors.primary_color};
+    }
+`;
 
 export const Profile = styled.div`
+    border: 2px solid ${colors.border_color};
+    border-radius: 50%;
+    transition: .3s ease;
+
     a {
         display: flex;
         align-items: center;
@@ -57,19 +76,18 @@ export const Profile = styled.div`
     }
 
     img {
-        height: 32px;
-        width: 32px;
+        height: 40px;
+        width: 40px;
         border-radius: 50%;
         overflow: hidden;
         color: #D9D9D9;
     }
 
     .icon {
-        font-size: 32px;
+        font-size: 40px;
     }
 
-    span {
-        color: ${colors.high_contrast_color};
-        font-weight: 600;
-    }    
-`
+    &:hover{
+        border-color: ${colors.primary_color};
+    }
+`;
