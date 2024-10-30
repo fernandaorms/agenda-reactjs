@@ -3,16 +3,45 @@ import { toast } from 'react-toastify';
 import { get } from 'lodash';
 import { FaEdit } from 'react-icons/fa';
 import { FaCircleUser, FaTrashCan } from 'react-icons/fa6';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import axios from '../../services/axios';
 import Loader from '../../components/Loader';
 import { Container, Users, User, ProfilePicture } from './styled';
 
 const Contacts = () => {
-    const [contacts, setContacts] = useState([]);
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const navigate = useNavigate();
+
+    const [contacts, setContacts] = useState([
+        {
+            id: 1,
+            profile_picture: [],
+            first_name: 'First Name',
+            last_name: 'Last Name',
+            email: 'email@email.com'
+        },
+        {
+            id: 2,
+            profile_picture: [],
+            first_name: 'First Name',
+            last_name: 'Last Name',
+            email: 'email@email.com'
+        },
+        {
+            id: 3,
+            profile_picture: [],
+            first_name: 'First Name',
+            last_name: 'Last Name',
+            email: 'email@email.com'
+        }
+    ]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        if (!isLoggedIn) return;
+
         async function getData() {
             try {
                 setIsLoading(true);
@@ -22,12 +51,18 @@ const Contacts = () => {
                 setContacts(response.data);
                 setIsLoading(false);
             } catch (err) {
-                toast.error(get(err, 'response.data.errors[0]', err.message));
+                const errors = get(err, 'response.data.errors', []);
+
+                if (errors.lenght) errors.map((error) => toast.error(error));
+                else toast.error(err.message);
+
+                setIsLoading(false);
+                navigate('/login');
             }
         }
 
         getData();
-    }, []);
+    }, [isLoggedIn, navigate]);
 
     return (
         <main>
@@ -45,7 +80,7 @@ const Contacts = () => {
                                 <User key={String(contact.id)}>
                                     <ProfilePicture>
                                         {get(contact, 'profile_picture.url', false) ? (
-                                            <img src={contact.profile_picture.url} alt={`${contact.first_name} ${contact.first_name} Profile Pic`} />
+                                            <img src={contact.profile_picture.url} alt={`${contact.first_name} ${contact.last_name} Profile Pic`} />
                                         ) : (
                                             <FaCircleUser />
                                         )}

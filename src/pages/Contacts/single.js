@@ -1,4 +1,4 @@
-const SingleContact = () => {
+const ContactsSingle = () => {
     return (
         <main>
             <section className='main'>
@@ -12,4 +12,4 @@ const SingleContact = () => {
     )
 };
 
-export default SingleContact;
+export default ContactsSingle;
