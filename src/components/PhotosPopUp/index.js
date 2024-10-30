@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 
 import { toast } from 'react-toastify';
 import { get } from 'lodash';
@@ -21,9 +21,9 @@ const PhotosPopUp = ({onConfirm, onCancel, defaultPhoto}) => {
     const [photos, setPhotos] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedPhoto, setSelectedPhoto] = useState(defaultPhoto);
-    const [selectedPhotoId, setSelectedPhotoId] = useState(defaultPhoto.id);
+    const [selectedPhotoId, setSelectedPhotoId] = useState(get(defaultPhoto, 'id', null));
 
-    const fetchPhotos = async () => {
+    const fetchPhotos = useCallback(async () => {
         setIsLoading(true);
 
         try {
@@ -38,7 +38,7 @@ const PhotosPopUp = ({onConfirm, onCancel, defaultPhoto}) => {
             const status = get(err, 'response.status', 0);
 
             if(status === 401) {
-                toast.error('You must log in.');
+                toast.error('Please login to access this page.');
 
                 dispatch(actions.loginFailure());
 
@@ -47,13 +47,13 @@ const PhotosPopUp = ({onConfirm, onCancel, defaultPhoto}) => {
             else if (errors.length > 0) errors.map((error) => toast.error(error));
             else toast.error(err.message);
         }
-    };
+    }, [dispatch, navigate]);
 
     useEffect(() => {
         if (!isLoggedIn) return;
 
         fetchPhotos();
-    }, [isLoggedIn]);
+    }, [isLoggedIn, fetchPhotos]);
 
     const handleSelect = (photo) => {
         setSelectedPhoto(photo);
@@ -77,7 +77,7 @@ const PhotosPopUp = ({onConfirm, onCancel, defaultPhoto}) => {
                                     </Photo>
 
                                     {photos.map((photo) => (
-                                        <Photo key={photo.id} className={photo.id == selectedPhotoId ? 'selected' : '' } onClick={(e) => handleSelect(photo)}>
+                                        <Photo key={photo.id} className={photo.id === selectedPhotoId ? 'selected' : '' } onClick={(e) => handleSelect(photo)}>
                                             <img src={photo.url} alt={photo.filename} />
                                         </Photo>
                                     ))}

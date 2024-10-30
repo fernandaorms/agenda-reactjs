@@ -41,7 +41,7 @@ const Photos = () => {
             const status = get(err, 'response.status', 0);
 
             if(status === 401) {
-                toast.error('You must log in.');
+                toast.error('Please login to access this page.');
 
                 dispatch(actions.loginFailure());
 

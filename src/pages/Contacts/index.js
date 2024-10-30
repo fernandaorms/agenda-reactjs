@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { get } from 'lodash';
 import { FaEdit } from 'react-icons/fa';
@@ -45,7 +45,7 @@ const Contacts = () => {
     const [showPopUp, setShowPopUp] = useState(false);
     const [deleteContactId, setDeleteContactId] = useState(null);
 
-    const fetchContacts = async () => {
+    const fetchContacts = useCallback(async () => {
         setIsLoading(true);
 
         try {
@@ -60,7 +60,7 @@ const Contacts = () => {
             const status = get(err, 'response.status', 0);
 
             if(status === 401) {
-                toast.error('You must log in.');
+                toast.error('Please login to access this page.');
 
                 dispatch(actions.loginFailure());
 
@@ -69,13 +69,13 @@ const Contacts = () => {
             else if (errors.length > 0) errors.map((error) => toast.error(error));
             else toast.error(err.message);
         }
-    }
+    }, [dispatch, navigate]);
 
     useEffect(() => {
         if (!isLoggedIn) return;
 
         fetchContacts();
-    }, [isLoggedIn, navigate]);
+    }, [isLoggedIn, fetchContacts]);
 
     const handleDeleteAsk = async (e, contactId) => {
         e.preventDefault();
@@ -144,7 +144,7 @@ const Contacts = () => {
                                         </ProfilePicture>
 
                                         <div className='name'>
-                                            <span>{contact.last_name} {contact.last_name}</span>
+                                            <span>{contact.first_name} {contact.last_name}</span>
                                         </div>
 
                                         <div className='email'>

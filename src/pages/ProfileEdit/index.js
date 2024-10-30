@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { isEmail } from 'validator';
 import { useDispatch, useSelector } from 'react-redux';
 import { get } from 'lodash';
 import { FaEdit } from 'react-icons/fa';
 import { FaCircleUser } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import * as actions from '../../store/modules/auth/actions';
+import axios from '../../services/axios';
 import Loader from '../../components/Loader';
 import PhotosPopUp from '../../components/PhotosPopUp';
 import { Title, ProfilePicture, Buttons } from './styled';
@@ -18,15 +20,15 @@ const ProfileEdit = () => {
     const navigate = useNavigate();
 
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
-    const isLoading = useSelector(state => state.auth.isLoading);
-    const user = useSelector(state => get(state, 'auth.user', null));
+    const stateLoading = useSelector(state => state.auth.isLoading);
+    const initialState = useSelector(state => state.auth.user);
 
-    const [firstName, setfirstName] = useState(get(user, 'first_name', ''));
-    const [lastName, setlastName] = useState(get(user, 'last_name', ''));
-    const [email, setEmail] = useState(get(user, 'email', ''));
-    const [profilePicture, setProfilePicture] = useState(get(user, 'profile_picture', {}));
-    const [profilePictureId, setProfilePictureId] = useState(get(user, 'profile_picture.id', null));
-
+    const [firstName, setfirstName] = useState(get(initialState, 'first_name'), '');
+    const [lastName, setlastName] = useState(get(initialState, 'last_name'), '');
+    const [email, setEmail] = useState(get(initialState, 'email'), '');
+    const [profilePicture, setProfilePicture] = useState(get(initialState, 'profile_picture'), {});
+    const [profilePictureId, setProfilePictureId] = useState(get(initialState, 'profile_picture_id'), null);
+    const [isLoading, setIsLoading] = useState(false);
     const [showPhotosPopUp, setShowPhotosPopUp] = useState(false);
 
     const [errors, setErrors] = useState({
@@ -35,14 +37,46 @@ const ProfileEdit = () => {
         email: [],
     });
 
-    const resetForm = (e) => {
+    const fetchUsers = useCallback(async () => {
+        setIsLoading(true);
+
+        try {
+            const response = await axios.get('users');
+            
+            const { first_name,  last_name, email, profile_picture, profile_picture_id } = response.data;
+            setfirstName(first_name);
+            setlastName(last_name);
+            setEmail(email);
+            setProfilePicture(profile_picture);
+            setProfilePictureId(profile_picture_id);
+            setIsLoading(false);
+        } catch (err) {
+            setIsLoading(false);
+            const errors = get(err, 'response.data.errors', []);
+            const status = get(err, 'response.status', 0);
+
+            if(status === 401) {
+                toast.error('Please login to access this page.');
+
+                dispatch(actions.loginFailure());
+
+                navigate('/login');
+            }
+            else if (errors.length > 0) errors.map((error) => toast.error(error));
+            else toast.error(err.message);
+        }
+    }, [dispatch, navigate]);
+
+    useEffect(() => {
+        if (!isLoggedIn) return;
+
+        fetchUsers();
+    }, [isLoggedIn, fetchUsers]);
+
+    const resetForm = async (e) => {
         e.preventDefault();
 
-        setfirstName(get(user, 'first_name', ''));
-        setlastName(get(user, 'last_name', ''));
-        setEmail(get(user, 'email', ''));
-        setProfilePicture(get(user, 'profile_picture', {}));
-        setProfilePictureId(get(user, 'profile_picture.id', null));
+        await fetchUsers();
     }
 
     const validateFormClient = () => {
@@ -106,6 +140,7 @@ const ProfileEdit = () => {
                 <div className='container'>
                     <FormContainer className='loader-container'>
                         <Loader isLoading={isLoading} />
+                        <Loader isLoading={stateLoading} />
 
                         <Title>
                             <h1>Edit Profile</h1>
@@ -113,7 +148,7 @@ const ProfileEdit = () => {
 
                         <Form onSubmit={handleSubmit} noValidate>
                             <ProfilePicture onClick={() => setShowPhotosPopUp(true)}>
-                                {profilePictureId ? (
+                                {get(profilePicture, 'url', null) ? (
                                     <>
                                         <img src={profilePicture.url} alt={`${firstName} ${lastName} Profile Pic`} className='picture' />
                                         <FaEdit className='edit' />

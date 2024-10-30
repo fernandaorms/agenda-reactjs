@@ -2,27 +2,54 @@ import React, { useEffect, useState } from 'react';
 import { get } from 'lodash';
 import { FaCircleUser, FaArrowRight, FaClipboardUser, FaImages } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import axios from '../../services/axios';
 import * as actions from '../../store/modules/auth/actions';
+import axios from '../../services/axios';
 import Loader from '../../components/Loader';
 import { Container, UserInfo, ProfilePicture, Menu } from './styled';
 import { DangerButtonLight } from '../../styles/buttons';
 
 const Profile = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
-    const user = useSelector(state => get(state, 'auth.user', null));
-    const isLoading = useSelector(state => state.auth.isLoading);
+
+    const [user, setUser] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (!isLoggedIn) return;
+
+        const fetchUsers = async () => {
+            setIsLoading(true);
+
+            try {
+                const response = await axios.get('users');
     
-    const [firstName, setfirstName] = useState(get(user, 'first_name', ''));
-    const [lastName, setlastName] = useState(get(user, 'last_name', ''));
-    const [email, setEmail] = useState(get(user, 'email', ''));
-    const [profilePicture, setProfilePicture] = useState(get(user, 'profile_picture', {}));
-    const [profilePictureId, setProfilePictureId] = useState(get(user, 'profile_picture.id', null));
+                setUser(response.data);
+                setIsLoading(false);
+            } catch (err) {
+                setIsLoading(false);
+                const errors = get(err, 'response.data.errors', []);
+                const status = get(err, 'response.status', 0);
+    
+                if(status === 401) {
+                    toast.error('Please login to access this page.');
+    
+                    dispatch(actions.loginFailure());
+    
+                    navigate('/login');
+                }
+                else if (errors.length > 0) errors.map((error) => toast.error(error));
+                else toast.error(err.message);
+            }
+        }
+
+        fetchUsers();
+    }, [isLoggedIn, dispatch, navigate]);
 
     const handleClick = (e) => {
         e.preventDefault();
@@ -39,19 +66,19 @@ const Profile = () => {
                             <Loader isLoading={isLoading} />
 
                             <ProfilePicture>
-                                {profilePictureId ? (
-                                    <img src={profilePicture.url}  alt={`${firstName} ${lastName} Profile Pic`} />
+                                {user.profile_picture_id ? (
+                                    <img src={user.profile_picture.url}  alt={`${user.first_name} ${user.last_name} Profile Pic`} />
                                 ) : (
                                     <FaCircleUser />
                                 )}
                             </ProfilePicture>
 
                             <div className='name'>
-                                <span>{firstName} {lastName}</span>
+                                <span>{user.first_name} {user.last_name}</span>
                             </div>
 
                             <div className='email'>
-                                <span>{email}</span>
+                                <span>{user.email}</span>
                             </div>
                         </UserInfo>
 

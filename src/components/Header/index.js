@@ -1,24 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { get } from 'lodash';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { FaAddressBook, FaCircleUser } from 'react-icons/fa6';
 
 import * as actions from '../../store/modules/auth/actions';
+import axios from '../../services/axios';
 import { Nav, Logo, Buttons, Menu, Profile } from './styled'
 
 const Header = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
-    const user = useSelector(state => get(state, 'auth.user', null));
     
-    const [firstName, setfirstName] = useState(get(user, 'first_name', ''));
-    const [lastName, setlastName] = useState(get(user, 'last_name', ''));
-    const [profilePicture, setProfilePicture] = useState(get(user, 'profile_picture', {}));
-    const [profilePictureId, setProfilePictureId] = useState(get(user, 'profile_picture.id', null));
+    const [user, setUser] = useState({});
+    
+    useEffect(() => {
+        if (!isLoggedIn) return;
+
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get('users');
+    
+                setUser(response.data);
+            } catch (err) {
+                const errors = get(err, 'response.data.errors', []);
+                const status = get(err, 'response.status', 0);
+    
+                if(status === 401) {
+                    toast.error('Please login to access this page.');
+    
+                    dispatch(actions.loginFailure());
+    
+                    navigate('/login');
+                }
+                else if (errors.length > 0) errors.map((error) => toast.error(error));
+                else toast.error(err.message);
+            }
+        }
+
+        fetchUsers();
+    }, [isLoggedIn, dispatch, navigate]);
 
     return (
         <header>
+            {}
             <div className='container'>
                 <Nav>
                     <div className='left'>
@@ -40,8 +68,8 @@ const Header = () => {
                         {isLoggedIn ? (
                             <Profile>
                                 <Link to='/profile'>
-                                    {profilePictureId ? (
-                                        <img src={profilePicture.url} alt={`${firstName} ${lastName} Profile Pic`} />
+                                    {get(user, 'profile_picture.url', null) ? (
+                                        <img src={user.profile_picture.url} alt={`${user.first_name} ${user.last_name} Profile Pic`} />
                                     ) : (
                                         <FaCircleUser className='icon' />
                                     )}

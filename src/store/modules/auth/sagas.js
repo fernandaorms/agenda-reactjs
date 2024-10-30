@@ -35,10 +35,10 @@ function* userUpdateRequest({ payload }) {
             first_name: firstName,
             last_name: lastName,
             email,
-            profile_picture_id:  profilePictureId
+            profile_picture_id:  profilePictureId || null
         });
 
-        yield put(actions.userUpdateSuccess({ ...response.data }));
+        yield put(actions.userUpdateSuccess({user: { ...response.data }}));
 
         toast.dismiss();
         toast.success('Update successful!');
@@ -47,7 +47,7 @@ function* userUpdateRequest({ payload }) {
         const status = get(err, 'response.status', 0);
 
         if(status === 401) {
-            toast.error('You must log in.');
+            toast.error('Please login to access this page.');
 
             yield put(actions.loginFailure());
 
