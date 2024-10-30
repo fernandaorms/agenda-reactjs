@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 import axios from '../../services/axios';
 import Loader from '../../components/Loader';
-import { Container, Users, User, ProfilePicture } from './styled';
+import { Container, Users, User, ProfilePicture, Empty } from './styled';
 
 const Contacts = () => {
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
@@ -76,33 +76,37 @@ const Contacts = () => {
                         </div>
 
                         <Users>
-                            {contacts.map(contact => (
-                                <User key={String(contact.id)}>
-                                    <ProfilePicture>
-                                        {get(contact, 'profile_picture.url', false) ? (
-                                            <img src={contact.profile_picture.url} alt={`${contact.first_name} ${contact.last_name} Profile Pic`} />
-                                        ) : (
-                                            <FaCircleUser />
-                                        )}
-                                    </ProfilePicture>
+                            {contacts.length > 0 ? (
+                                contacts.map(contact => (
+                                    <User key={String(contact.id)}>
+                                        <ProfilePicture>
+                                            {get(contact, 'profile_picture.url', false) ? (
+                                                <img src={contact.profile_picture.url} alt={`${contact.first_name} ${contact.last_name} Profile Pic`} />
+                                            ) : (
+                                                <FaCircleUser />
+                                            )}
+                                        </ProfilePicture>
 
-                                    <div className='name'>
-                                        <span>{contact.last_name} {contact.last_name}</span>
-                                    </div>
+                                        <div className='name'>
+                                            <span>{contact.last_name} {contact.last_name}</span>
+                                        </div>
 
-                                    <div className='email'>
-                                        <span>{contact.email}</span>
-                                    </div>
+                                        <div className='email'>
+                                            <span>{contact.email}</span>
+                                        </div>
 
-                                    <div className='edit'>
-                                        <FaEdit className='icon' />
-                                    </div>
+                                        <div className='edit'>
+                                            <FaEdit className='icon' />
+                                        </div>
 
-                                    <div className='delete'>
-                                        <FaTrashCan className='icon' />
-                                    </div>
-                                </User>
-                            ))}
+                                        <div className='delete'>
+                                            <FaTrashCan className='icon' />
+                                        </div>
+                                    </User>
+                                ))
+                            ) : (
+                                !isLoading && (<Empty><span>No Contacts found</span></Empty>)
+                            )}
                         </Users>
                     </Container>
                 </div>

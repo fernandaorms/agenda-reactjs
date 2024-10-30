@@ -76,3 +76,10 @@ export const ProfilePicture = styled.div`
         width: 100%;
     }
 `
+
+export const Empty = styled.div`
+    font-size: 18px;
+    font-weight: 500;
+    color: ${colors.high_contrast_color};
+    text-align: center;
+`
