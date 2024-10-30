@@ -2,7 +2,7 @@
 
 ## Screen
 
-![App Result](https://github.com/fernandaorms/agenda-reactjs/blob/main/screen/AgendaReactJS.gif);
+![App Result](https://github.com/fernandaorms/agenda-reactjs/blob/main/screen/AgendaReactJS.gif)
 
 ## Overview
 
