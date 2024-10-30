@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 
 import axios from '../../services/axios';
 import Loader from '../../components/Loader';
+import ConfirmationPopUp from '../../components/ConfirmationPopUp';
 import { Container, Users, User, ProfilePicture, Empty } from './styled';
 
 const Contacts = () => {
@@ -38,33 +39,78 @@ const Contacts = () => {
         }
     ]);
     const [isLoading, setIsLoading] = useState(false);
+    const [showPopUp, setShowPopUp] = useState(false);
+    const [deleteContactId, setDeleteContactId] = useState(null);
+
+    const fetchContacts = async () => {
+        setIsLoading(true);
+
+        try {
+            const response = await axios.get('contacts');
+
+            setContacts(response.data);
+            setIsLoading(false);
+        } catch (err) {
+            const errors = get(err, 'response.data.errors', []);
+
+            if (errors.length > 0) errors.map((error) => toast.error(error));
+            else toast.error(err.message);
+
+            setIsLoading(false);
+        }
+    }
 
     useEffect(() => {
         if (!isLoggedIn) return;
 
-        async function getData() {
-            setIsLoading(true);
-            
-            try {
-                const response = await axios.get('contacts');
+        fetchContacts();
+    }, [isLoggedIn, navigate]);
 
-                setContacts(response.data);
-                setIsLoading(false);
-            } catch (err) {
-                const errors = get(err, 'response.data.errors', []);
+    const handleDeleteAsk = async (e, contactId) => {
+        e.preventDefault();
+        setDeleteContactId(contactId);
+        setShowPopUp(true);
+    }
 
-                if (errors.length > 0) errors.map((error) => toast.error(error));
-                else toast.error(err.message);
+    const handleConfirm = async () => {
+        setShowPopUp(false);
+        setIsLoading(true);
 
-                setIsLoading(false);
-            }
+        try {
+            await axios.delete(`contacts/${deleteContactId}`);
+
+            setIsLoading(false);
+
+            toast.dismiss();
+            toast.success('Delete successful!');
+
+            await fetchContacts();
+        } catch (err) {
+            const errors = get(err, 'response.data.errors', []);
+
+            if (errors.length > 0) errors.map((error) => toast.error(error));
+            else toast.error(err.message);
+
+            setIsLoading(false);
         }
 
-        getData();
-    }, [isLoggedIn, navigate]);
+        setDeleteContactId(null);
+    };
+
+    const handleCancel = () => {
+        setShowPopUp(false);
+    };
 
     return (
         <main>
+            {showPopUp && (
+                <ConfirmationPopUp
+                    onConfirm={handleConfirm}
+                    onCancel={handleCancel}
+                    actionName='Delete Contact'
+                />
+            )}
+
             <section className='main'>
                 <div className='container'>
                     <Container className='loader-container'>
@@ -94,12 +140,16 @@ const Contacts = () => {
                                             <span>{contact.email}</span>
                                         </div>
 
+                                        <div className='phone'>
+                                            <span>{contact.phone && (contact.phone)}</span>
+                                        </div>
+
                                         <div className='edit'>
                                             <FaEdit className='icon' />
                                         </div>
 
                                         <div className='delete'>
-                                            <FaTrashCan className='icon' />
+                                            <FaTrashCan className='icon' onClick={(e) => handleDeleteAsk(e, contact.id)} />
                                         </div>
                                     </User>
                                 ))

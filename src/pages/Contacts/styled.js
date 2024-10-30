@@ -6,7 +6,6 @@ export const Container = styled.div`
     border-radius: 12px;
     border: 1px solid #D9D9D9;
     background: #FFF;
-    max-width: 596px;
     margin: 0 auto;
 
     .title {
@@ -32,7 +31,7 @@ export const Users = styled.div`
 export const User = styled.div`
     display: grid;
     align-items: center;
-    grid-template-columns: 40px 1fr 1fr 32px 32px;
+    grid-template-columns: 40px 1fr 1fr 1fr 32px 32px;
     gap: 0 12px;
 
     span {
