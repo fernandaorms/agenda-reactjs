@@ -5,31 +5,14 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaAddressBook, FaCircleUser } from 'react-icons/fa6';
 
-import axios from '../../services/axios';
 import { Nav, Logo, Buttons, Menu, Profile } from './styled'
 
 const Header = () => {
+    const user = useSelector(state => state.auth.user);
+
+    const { first_name: firstName, last_name: lastName, profile_picture: profilePicture } = user;
+
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
-    const [user, setUser] = useState([]);
-
-    useEffect(() => {
-        if (!isLoggedIn) return;
-
-        async function getData() {
-            try {
-                const response = await axios.get('users');
-
-                setUser(response.data);
-            } catch (err) {
-                const errors = get(err, 'response.data.errors', []);
-
-                if (errors.length > 0) errors.map((error) => toast.error(error));
-                else toast.error(err.message);
-            }
-        }
-
-        getData();
-    }, [isLoggedIn]);
 
     return (
         <header>
@@ -54,8 +37,8 @@ const Header = () => {
                         {isLoggedIn ? (
                             <Profile>
                                 <Link to='/profile'>
-                                    {get(user, 'profile_picture.url', false) ? (
-                                        <img src={user.profile_picture.url} alt={`${user.first_name} ${user.last_name} Profile Pic`} />
+                                    {profilePicture ? (
+                                        <img src={profilePicture.url} alt={`${firstName} ${lastName} Profile Pic`} />
                                     ) : (
                                         <FaCircleUser className='icon' />
                                     )}

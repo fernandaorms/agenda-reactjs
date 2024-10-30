@@ -6,7 +6,7 @@ import Login from '../pages/Login';
 import Page404 from '../pages/Page404';
 import Photos from '../pages/Photos';
 import Profile from '../pages/Profile';
-import ProfileEdit from '../pages/Profile/edit';
+import ProfileEdit from '../pages/ProfileEdit';
 import SignUp from '../pages/SignUp';
 
 import PrivateRoutes from './PrivateRoutes';

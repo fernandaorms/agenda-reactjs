@@ -12,35 +12,12 @@ import { Container, UserInfo, ProfilePicture, Menu } from './styled';
 import { DangerButtonLight } from '../../styles/buttons';
 
 const Profile = () => {
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
     const dispatch = useDispatch();
 
-    const [user, setUser] = useState([]);
+    const user = useSelector(state => state.auth.user);
+    const { first_name: firstName, last_name: lastName, profile_picture: profilePicture, email } = user;
+
     const [isLoading, setIsLoading] = useState(false);
-
-    useEffect(() => {
-        if (!isLoggedIn) return;
-
-        async function getData() {
-            setIsLoading(true);
-            
-            try {
-                const response = await axios.get('users');
-    
-                setUser(response.data);
-                setIsLoading(false);
-            } catch (err) {
-                const errors = get(err, 'response.data.errors', []);
-
-                if (errors.length > 0) errors.map((error) => toast.error(error));
-                else toast.error(err.message);
-
-                setIsLoading(false);
-            }
-        }
-
-        getData();
-    }, []);
 
     const handleClick = (e) => {
         e.preventDefault();
@@ -57,19 +34,19 @@ const Profile = () => {
                             <Loader isLoading={isLoading} />
 
                             <ProfilePicture>
-                                {get(user, 'profile_picture.url', false) ? (
-                                    <img src={user.profile_picture.url}  alt={`${user.first_name} ${user.first_name} Profile Pic`} />
+                                {profilePicture ? (
+                                    <img src={profilePicture.url}  alt={`${firstName} ${lastName} Profile Pic`} />
                                 ) : (
                                     <FaCircleUser />
                                 )}
                             </ProfilePicture>
 
                             <div className='name'>
-                                <span>{user.first_name} {user.last_name}</span>
+                                <span>{firstName} {lastName}</span>
                             </div>
 
                             <div className='email'>
-                                <span>{user.email}</span>
+                                <span>{email}</span>
                             </div>
                         </UserInfo>
 

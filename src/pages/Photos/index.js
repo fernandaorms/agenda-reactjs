@@ -15,11 +15,11 @@ const Photos = () => {
 
     const [photos, setPhotos] = useState([]);
     const [deletePhotoId, setDeletePhotoId] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
     const [files, setFiles] = useState([]);
     const [errors, setErrors] = useState([]);
     const [showPopUp, setShowPopUp] = useState(false);
     const fileInputRef = useRef(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const fetchPhotos = async () => {
         setIsLoading(true);
