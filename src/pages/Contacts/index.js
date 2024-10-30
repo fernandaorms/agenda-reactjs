@@ -43,9 +43,9 @@ const Contacts = () => {
         if (!isLoggedIn) return;
 
         async function getData() {
+            setIsLoading(true);
+            
             try {
-                setIsLoading(true);
-
                 const response = await axios.get('contacts');
 
                 setContacts(response.data);
@@ -53,11 +53,10 @@ const Contacts = () => {
             } catch (err) {
                 const errors = get(err, 'response.data.errors', []);
 
-                if (errors.lenght) errors.map((error) => toast.error(error));
+                if (errors.length > 0) errors.map((error) => toast.error(error));
                 else toast.error(err.message);
 
                 setIsLoading(false);
-                navigate('/login');
             }
         }
 

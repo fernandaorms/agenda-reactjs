@@ -23,7 +23,7 @@ const Header = () => {
             } catch (err) {
                 const errors = get(err, 'response.data.errors', []);
 
-                if (errors.lenght) errors.map((error) => toast.error(error));
+                if (errors.length > 0) errors.map((error) => toast.error(error));
                 else toast.error(err.message);
             }
         }

@@ -25,13 +25,15 @@ export const DangerButtonLight = styled.button`
     transition: .3s ease;
     border-radius: 80px;
     border: none;
-    background: #FFF1F1;
+    background: #FFF;
     color: ${colors.danger_color};
+    border: 1px solid ${colors.danger_color};
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
 
     &:hover {
         background: #FFD5D5;
+        border-color: transparent;
     }
 `

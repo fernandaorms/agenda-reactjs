@@ -5,7 +5,7 @@ import * as colors from './colors';
 export const FormContainer = styled.div`
     padding: 40px 32px;
     border-radius: 12px;
-    border: 1px solid #D9D9D9;
+    border: 1px solid ${colors.border_color};
     background: #FFF;
     max-width: 596px;
     margin: 0 auto;

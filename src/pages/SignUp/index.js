@@ -91,15 +91,18 @@ const SignUp = () => {
                 email: email,
                 password: password
             });
+ 
+            toast.dismiss();
+            toast.success('Registration successful! Please log in to continue.');
 
             setIsLoading(false);
             
-            toast.dismiss();
-            toast.success('Registration successful! Please log in to continue.');
             navigate('/login');
         } catch (err) {
             const errors = get(err, 'response.data.errors', []);
-            errors.map((error) => toast.error(error));
+
+            if (errors.length > 0) errors.map((error) => toast.error(error));
+            else toast.error(err.message);
 
             setIsLoading(false);
         }
