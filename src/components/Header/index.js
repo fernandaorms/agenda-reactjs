@@ -5,14 +5,17 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaAddressBook, FaCircleUser } from 'react-icons/fa6';
 
+import * as actions from '../../store/modules/auth/actions';
 import { Nav, Logo, Buttons, Menu, Profile } from './styled'
 
 const Header = () => {
-    const user = useSelector(state => state.auth.user);
-
-    const { first_name: firstName, last_name: lastName, profile_picture: profilePicture } = user;
-
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const user = useSelector(state => get(state, 'auth.user', null));
+    
+    const [firstName, setfirstName] = useState(get(user, 'first_name', ''));
+    const [lastName, setlastName] = useState(get(user, 'last_name', ''));
+    const [profilePicture, setProfilePicture] = useState(get(user, 'profile_picture', {}));
+    const [profilePictureId, setProfilePictureId] = useState(get(user, 'profile_picture.id', null));
 
     return (
         <header>
@@ -37,7 +40,7 @@ const Header = () => {
                         {isLoggedIn ? (
                             <Profile>
                                 <Link to='/profile'>
-                                    {profilePicture ? (
+                                    {profilePictureId ? (
                                         <img src={profilePicture.url} alt={`${firstName} ${lastName} Profile Pic`} />
                                     ) : (
                                         <FaCircleUser className='icon' />

@@ -1,5 +1,6 @@
 import * as types from '../types'
 import axios from '../../../services/axios';
+import { loginFailure } from './actions';
 
 const initialState = {
     isLoggedIn: false,
@@ -11,7 +12,7 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case types.LOGIN_REQUEST: {
-            const newState = { 
+            const newState = {
                 ...state,
                 isLoading: true,
             };
@@ -19,7 +20,7 @@ const reducer = (state = initialState, action) => {
         }
 
         case types.LOGIN_SUCCESS: {
-            const {token, user } = action.payload;
+            const { token, user } = action.payload;
 
             const newState = {
                 ...state,
@@ -35,6 +36,35 @@ const reducer = (state = initialState, action) => {
         case types.LOGIN_FAILURE: {
             delete axios.defaults.headers.Authorization;
             const newState = { ...initialState };
+            return newState;
+        }
+
+        case types.USER_UPDATE_REQUEST: {
+            const newState = {
+                ...state,
+                isLoading: true,
+            };
+            return newState;
+        }
+
+        case types.USER_UPDATE_SUCCESS: {
+            const { user } = action.payload;
+            
+            const newState = {
+                ...state,
+                isLoading: false,
+                user: user,
+            }
+
+            return newState;
+        }
+
+        case types.USER_UPDATE_FAILURE: {
+            const newState = {
+                ...state,
+                isLoading: false,
+            };
+
             return newState;
         }
 

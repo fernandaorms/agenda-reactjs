@@ -4,16 +4,19 @@ import { get } from 'lodash';
 import { FaEdit } from 'react-icons/fa';
 import { FaCircleUser, FaTrashCan } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
+import * as actions from '../../store/modules/auth/actions';
 import axios from '../../services/axios';
 import Loader from '../../components/Loader';
 import ConfirmationPopUp from '../../components/ConfirmationPopUp';
 import { Container, Users, User, ProfilePicture, Empty } from './styled';
 
 const Contacts = () => {
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
     const [contacts, setContacts] = useState([
         {
@@ -51,12 +54,20 @@ const Contacts = () => {
             setContacts(response.data);
             setIsLoading(false);
         } catch (err) {
-            const errors = get(err, 'response.data.errors', []);
-
-            if (errors.length > 0) errors.map((error) => toast.error(error));
-            else toast.error(err.message);
-
             setIsLoading(false);
+
+            const errors = get(err, 'response.data.errors', []);
+            const status = get(err, 'response.status', 0);
+
+            if(status === 401) {
+                toast.error('You must log in.');
+
+                dispatch(actions.loginFailure());
+
+                navigate('/login');
+            }
+            else if (errors.length > 0) errors.map((error) => toast.error(error));
+            else toast.error(err.message);
         }
     }
 

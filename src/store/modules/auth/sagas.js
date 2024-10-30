@@ -27,6 +27,39 @@ function* loginRequest({ payload }) {
     }
 }
 
+function* userUpdateRequest({ payload }) {
+    const { firstName, lastName, email, profilePictureId, navigate } = payload;
+
+    try {
+        const response = yield call(axios.put, '/users', { 
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            profile_picture_id:  profilePictureId
+        });
+
+        yield put(actions.userUpdateSuccess({ ...response.data }));
+
+        toast.dismiss();
+        toast.success('Update successful!');
+    } catch (err) {
+        const errors = get(err, 'response.data.errors', []);
+        const status = get(err, 'response.status', 0);
+
+        if(status === 401) {
+            toast.error('You must log in.');
+
+            yield put(actions.loginFailure());
+
+            navigate('/login');
+        }
+        else if (errors.length > 0) errors.map((error) => toast.error(error));
+        else toast.error(err.message);
+
+        yield put(actions.userUpdateFailure());
+    }
+}
+
 function persistRehydrate({ payload }) {
     const token = get(payload, 'auth.token', '');
     if(!token) return;
@@ -36,5 +69,6 @@ function persistRehydrate({ payload }) {
 
 export default all([
     takeLatest(types.LOGIN_REQUEST, loginRequest),
+    takeLatest(types.USER_UPDATE_REQUEST, userUpdateRequest),
     takeLatest(types.PERSIST_REHYDRATE, persistRehydrate)
 ]);

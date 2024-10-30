@@ -14,10 +14,15 @@ import { DangerButtonLight } from '../../styles/buttons';
 const Profile = () => {
     const dispatch = useDispatch();
 
-    const user = useSelector(state => state.auth.user);
-    const { first_name: firstName, last_name: lastName, profile_picture: profilePicture, email } = user;
-
-    const [isLoading, setIsLoading] = useState(false);
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const user = useSelector(state => get(state, 'auth.user', null));
+    const isLoading = useSelector(state => state.auth.isLoading);
+    
+    const [firstName, setfirstName] = useState(get(user, 'first_name', ''));
+    const [lastName, setlastName] = useState(get(user, 'last_name', ''));
+    const [email, setEmail] = useState(get(user, 'email', ''));
+    const [profilePicture, setProfilePicture] = useState(get(user, 'profile_picture', {}));
+    const [profilePictureId, setProfilePictureId] = useState(get(user, 'profile_picture.id', null));
 
     const handleClick = (e) => {
         e.preventDefault();
@@ -34,7 +39,7 @@ const Profile = () => {
                             <Loader isLoading={isLoading} />
 
                             <ProfilePicture>
-                                {profilePicture ? (
+                                {profilePictureId ? (
                                     <img src={profilePicture.url}  alt={`${firstName} ${lastName} Profile Pic`} />
                                 ) : (
                                     <FaCircleUser />

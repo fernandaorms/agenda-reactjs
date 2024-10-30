@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { isEmail } from 'validator';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { get } from 'lodash';
 import { FaEdit } from 'react-icons/fa';
 import { FaCircleUser } from 'react-icons/fa6';
+import { useNavigate } from 'react-router-dom';
 
-import axios from '../../services/axios';
+import * as actions from '../../store/modules/auth/actions';
 import Loader from '../../components/Loader';
 import PhotosPopUp from '../../components/PhotosPopUp';
 import { Title, ProfilePicture, Buttons } from './styled';
@@ -13,7 +14,12 @@ import { FormContainer, Form } from '../../styles/forms';
 import { PrimaryButton, DangerButtonLight } from '../../styles/buttons';
 
 const ProfileEdit = () => {
-    const user = useSelector(state => state.auth.user);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const isLoading = useSelector(state => state.auth.isLoading);
+    const user = useSelector(state => get(state, 'auth.user', null));
 
     const [firstName, setfirstName] = useState(get(user, 'first_name', ''));
     const [lastName, setlastName] = useState(get(user, 'last_name', ''));
@@ -21,14 +27,12 @@ const ProfileEdit = () => {
     const [profilePicture, setProfilePicture] = useState(get(user, 'profile_picture', {}));
     const [profilePictureId, setProfilePictureId] = useState(get(user, 'profile_picture.id', null));
 
-    const [isLoading, setIsLoading] = useState(false);
     const [showPhotosPopUp, setShowPhotosPopUp] = useState(false);
 
     const [errors, setErrors] = useState({
         firstName: [],
         lastName: [],
         email: [],
-        profilePicture: []
     });
 
     const resetForm = (e) => {
@@ -48,7 +52,6 @@ const ProfileEdit = () => {
             firstName: [],
             lastName: [],
             email: [],
-            profilePicture: []
         };
 
         if (firstName.length < 3 || firstName.length > 255) {
@@ -86,11 +89,7 @@ const ProfileEdit = () => {
 
         if (validateFormClient()) return;
 
-        console.log(firstName);
-        console.log(lastName);
-        console.log(email);
-        console.log(profilePicture);
-        console.log(profilePictureId);
+        dispatch(actions.userUpdateRequest({ firstName, lastName, email, profilePictureId, navigate }));
     }
 
     return (

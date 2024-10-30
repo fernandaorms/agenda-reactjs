@@ -2,8 +2,10 @@ import React, { useEffect, useState, useRef  } from 'react';
 import { toast } from 'react-toastify';
 import { get } from 'lodash';
 import { FaFileImage, FaTrashCan } from 'react-icons/fa6';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
+import * as actions from '../../store/modules/auth/actions';
 import axios from '../../services/axios';
 import Loader from '../../components/Loader';
 import ConfirmationPopUp from '../../components/ConfirmationPopUp';
@@ -11,6 +13,9 @@ import { Container, Gallery, Form, LoadPhoto, Photo, Buttons } from './styled';
 import { DangerButtonLight, PrimaryButton } from '../../styles/buttons';
 
 const Photos = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
     const [photos, setPhotos] = useState([]);
@@ -30,12 +35,20 @@ const Photos = () => {
             setPhotos(response.data);
             setIsLoading(false);
         } catch (err) {
-            const errors = get(err, 'response.data.errors', []);
-
-            if (errors.length > 0) errors.map((error) => toast.error(error));
-            else toast.error(err.message);
-
             setIsLoading(false);
+
+            const errors = get(err, 'response.data.errors', []);
+            const status = get(err, 'response.status', 0);
+
+            if(status === 401) {
+                toast.error('You must log in.');
+
+                dispatch(actions.loginFailure());
+
+                navigate('/login');
+            }
+            else if (errors.length > 0) errors.map((error) => toast.error(error));
+            else toast.error(err.message);
         }
     };
 
